@@ -15,6 +15,15 @@ function Main(props) {
       })
       .catch((err) => props.onErrorEvent(err));
   };
+  const handleCardDelete = ({ _id: id }) => {
+    api
+      .deleteCard(id)
+      .then(() => {
+        const filteredCards = cards.filter((cardItem) => cardItem._id !== id);
+        setCards(filteredCards);
+      })
+      .catch((err) => props.onErrorEvent(err));
+  };
 
   React.useEffect(() => {
     api
@@ -43,7 +52,7 @@ function Main(props) {
       <section className="photos-grid">
         <ul className="photos-grid__list">
           {cards.map((card) => {
-            return <Card key={card._id} card={card} onCardClick={props.onCardClick} onCardLike={handleCardLike} />;
+            return <Card key={card._id} card={card} onCardClick={props.onCardClick} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />;
           })}
         </ul>
       </section>
