@@ -4,6 +4,7 @@ import Main from "./Main";
 import Footer from "./Footer";
 import PopupWithForm from "./PopupWithForm";
 import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
 import ImagePopup from "./ImagePopup";
 import api from "../utils/api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
@@ -42,6 +43,13 @@ function App() {
       .catch((err) => handleErrorEvent(err));
   };
 
+  const handleUpdateAvatar = (avatarUrl) => {
+    api
+      .setUserAvatar(avatarUrl)
+      .then((userData) => setCurrentUser(userData))
+      .catch((err) => handleErrorEvent(err));
+  };
+
   const closeAllPopups = () => {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
@@ -58,12 +66,7 @@ function App() {
         <Main onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onCardClick={handleCardClick} onErrorEvent={handleErrorEvent} onDeleteClick={handleDeleteCardClick} />
         <Footer />
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
-        <PopupWithForm name="edit-avatar" title="Change profile picture" isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} textOnButton="Save">
-          <label className="popup__field">
-            <input type="url" className="popup__input popup__input_type_avatar-src" id="avatar-url-input" placeholder="Image link" name="avatar" required />
-            <span className="popup__input-error avatar-url-input-error"></span>
-          </label>
-        </PopupWithForm>
+        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
         <PopupWithForm name="add-card" title="New place" isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} textOnButton="Create">
           <label className="popup__field">
             <input type="text" className="popup__input popup__input_type_place" id="place-input" placeholder="Title" name="name" minLength="1" maxLength="30" required />

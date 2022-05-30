@@ -28,7 +28,7 @@ class Api {
     return this._customFetch({ url: `${this._baseUrl}/cards/likes/${cardId}`, method: isLiked ? "DELETE" : "PUT" });
   };
 
-  setUserAvatar = (avatarLink) => this._customFetch({ url: `${this._baseUrl}/users/me/avatar`, method: "PATCH", data: { avatar: avatarLink.avatar } });
+  setUserAvatar = (avatarLink) => this._customFetch({ url: `${this._baseUrl}/users/me/avatar`, method: "PATCH", data: { avatar: avatarLink } });
 }
 
 const api = new Api("https://around.nomoreparties.co/v1/group-12", "3e63b17a-6497-4226-90cf-4d7937b7aba1");
