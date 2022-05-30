@@ -5,8 +5,8 @@ import Card from "./Card";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 
 function AddCardPopup(props) {
-  const [cardName, setCardName] = React.useState([]);
-  const [cardLink, setCardLink] = React.useState([]);
+  const [cardName, setCardName] = React.useState("");
+  const [cardLink, setCardLink] = React.useState("");
 
   const handleCardNameChange = (e) => {
     setCardName(e.target.value);

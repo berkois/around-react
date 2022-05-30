@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 
-export default function Card(props) {
+function Card(props) {
   const currentUser = useContext(CurrentUserContext);
   const isOwn = props.card.owner._id === currentUser._id;
   const cardDeleteButtonClassName = isOwn ? "photos-grid__trash" : "photos-grid__trash_disabled";
@@ -31,3 +31,5 @@ export default function Card(props) {
     </li>
   );
 }
+
+export default Card;
