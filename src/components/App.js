@@ -5,7 +5,7 @@ import Footer from "./Footer";
 import PopupWithForm from "./PopupWithForm";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
-import AddCardPopup from "./AddCardPopup";
+import AddPlacePopup from "./AddPlacePopup";
 import ImagePopup from "./ImagePopup";
 import api from "../utils/api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
@@ -103,7 +103,7 @@ function App() {
         <Footer />
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
-        <AddCardPopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddCard={handleAddCard} />
+        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddCard={handleAddCard} />
         <PopupWithForm name="delete-card" title="Are you sure?" isOpen={isDeleteCardPopupOpen} onClose={closeAllPopups} textOnButton="Yes" />
         <PopupWithForm name="error" title="An error occurred." isOpen={isErrorMessagePopupOpen} onClose={closeAllPopups} textOnButton="OK" />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />

@@ -1,10 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import PopupWithForm from "./PopupWithForm";
-import api from "../utils/api";
-import Card from "./Card";
-import CurrentUserContext from "../contexts/CurrentUserContext";
 
-function AddCardPopup(props) {
+function AddPlacePopup(props) {
   const [cardName, setCardName] = React.useState("");
   const [cardLink, setCardLink] = React.useState("");
 
@@ -35,4 +32,4 @@ function AddCardPopup(props) {
   );
 }
 
-export default AddCardPopup;
+export default AddPlacePopup;
