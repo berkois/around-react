@@ -24,9 +24,9 @@ class Api {
 
   deleteCard = (cardId) => this._customFetch({ url: `${this._baseUrl}/cards/${cardId}`, method: "DELETE" });
 
-  addLike = (cardId) => this._customFetch({ url: `${this._baseUrl}/cards/likes/${cardId}`, method: "PUT" });
-
-  removeLike = (cardId) => this._customFetch({ url: `${this._baseUrl}/cards/likes/${cardId}`, method: "DELETE" });
+  changeLikeStatus = (cardId, isLiked) => {
+    return this._customFetch({ url: `${this._baseUrl}/cards/likes/${cardId}`, method: isLiked ? "DELETE" : "PUT" });
+  };
 
   setUserAvatar = (avatarLink) => this._customFetch({ url: `${this._baseUrl}/users/me/avatar`, method: "PATCH", data: { avatar: avatarLink.avatar } });
 }
