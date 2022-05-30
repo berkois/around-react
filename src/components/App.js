@@ -3,6 +3,7 @@ import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
 import PopupWithForm from "./PopupWithForm";
+import EditProfilePopup from "./EditProfilePopup";
 import ImagePopup from "./ImagePopup";
 import api from "../utils/api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
@@ -18,7 +19,7 @@ function App() {
   React.useEffect(() => {
     api
       .getUserInfo()
-      .then((userInfo) => setCurrentUser(userInfo))
+      .then((userData) => setCurrentUser(userData))
       .catch((err) => handleErrorEvent(err));
   }, []);
 
@@ -33,6 +34,13 @@ function App() {
   const handleErrorEvent = () => setIsErrorMessagePopupOpen(true);
 
   const handleCardClick = (card) => setSelectedCard(card);
+
+  const handleUpdateUser = (userData) => {
+    api
+      .updateUserInfo(userData)
+      .then((userData) => setCurrentUser(userData))
+      .catch((err) => handleErrorEvent(err));
+  };
 
   const closeAllPopups = () => {
     setIsEditAvatarPopupOpen(false);
@@ -49,16 +57,7 @@ function App() {
         <Header />
         <Main onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onCardClick={handleCardClick} onErrorEvent={handleErrorEvent} onDeleteClick={handleDeleteCardClick} />
         <Footer />
-        <PopupWithForm name="edit-profile" title="Edit profile" isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} textOnButton="Save">
-          <label className="popup__field">
-            <input type="text" className="popup__input popup__input_type_name" id="name-input" name="name" minLength="2" maxLength="40" required />
-            <span className="popup__input-error name-input-error"></span>
-          </label>
-          <label className="popup__field">
-            <input type="text" className="popup__input popup__input_type_job" id="title-input" name="about" minLength="2" maxLength="200" required />
-            <span className="popup__input-error title-input-error"></span>
-          </label>
-        </PopupWithForm>
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
         <PopupWithForm name="edit-avatar" title="Change profile picture" isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} textOnButton="Save">
           <label className="popup__field">
             <input type="url" className="popup__input popup__input_type_avatar-src" id="avatar-url-input" placeholder="Image link" name="avatar" required />

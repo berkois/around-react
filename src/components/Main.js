@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import avatarIcon from "../images/edit_icon.svg";
 import api from "../utils/api";
 import Card from "./Card";
@@ -6,7 +6,7 @@ import CurrentUserContext from "../contexts/CurrentUserContext";
 
 function Main(props) {
   const [cards, setCards] = React.useState([]);
-  const currentUser = React.useContext(CurrentUserContext);
+  const currentUser = useContext(CurrentUserContext);
   const handleCardLike = (card, isLiked) => {
     api
       .changeLikeStatus(card._id, isLiked)
@@ -45,7 +45,7 @@ function Main(props) {
             <h1 className="profile__name">{currentUser.name}</h1>
             <button className="button profile__edit-button" type="button" aria-label="edit-button" onClick={props.onEditProfileClick}></button>
           </div>
-          <p className="profile__title">{currentUser.description}</p>
+          <p className="profile__title">{currentUser.about}</p>
         </div>
         <button className="button profile__add-button" type="button" aria-label="add-button" onClick={props.onAddPlaceClick}></button>
       </section>
