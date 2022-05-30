@@ -4,7 +4,6 @@ import CurrentUserContext from "../contexts/CurrentUserContext";
 
 function EditProfilePopup(props) {
   const currentUser = useContext(CurrentUserContext);
-  const { isOpen, onClose, onUpdateUser } = props;
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
 
@@ -13,29 +12,29 @@ function EditProfilePopup(props) {
     setDescription(currentUser.about);
   }, [currentUser]);
 
-  const hundleNameChange = (e) => {
+  const handleNameChange = (e) => {
     setName(e.target.value);
   };
-  const hundleDescriptionChange = (e) => {
+  const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
   };
-  const hundleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdateUser({
+    props.onUpdateUser({
       name,
       about: description,
     });
-    onClose();
+    props.onClose();
   };
 
   return (
-    <PopupWithForm name="edit-profile" title="Edit profile" isOpen={isOpen} onClose={onClose} onSubmit={hundleSubmit} textOnButton="Save">
+    <PopupWithForm name="edit-profile" title="Edit profile" isOpen={props.isOpen} onClose={props.onClose} onSubmit={handleSubmit} textOnButton="Save">
       <label className="popup__field">
-        <input type="text" className="popup__input popup__input_type_name" value={name} onChange={hundleNameChange} id="name-input" name="name" minLength="2" maxLength="40" required />
+        <input type="text" className="popup__input popup__input_type_name" value={name} onChange={handleNameChange} id="name-input" name="name" minLength="2" maxLength="40" required />
         <span className="popup__input-error name-input-error"></span>
       </label>
       <label className="popup__field">
-        <input type="text" className="popup__input popup__input_type_job" value={description} onChange={hundleDescriptionChange} id="title-input" name="about" minLength="2" maxLength="200" required />
+        <input type="text" className="popup__input popup__input_type_job" value={description} onChange={handleDescriptionChange} id="title-input" name="about" minLength="2" maxLength="200" required />
         <span className="popup__input-error title-input-error"></span>
       </label>
     </PopupWithForm>

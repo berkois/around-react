@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import PopupWithForm from "./PopupWithForm";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
+import AddCardPopup from "./AddCardPopup";
 import ImagePopup from "./ImagePopup";
 import api from "../utils/api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
@@ -17,6 +18,8 @@ function App() {
   const [isErrorMessagePopupOpen, setIsErrorMessagePopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState(null);
   const [currentUser, setCurrentUser] = React.useState({});
+  const [cards, setCards] = React.useState([]);
+
   React.useEffect(() => {
     api
       .getUserInfo()
@@ -36,6 +39,13 @@ function App() {
 
   const handleCardClick = (card) => setSelectedCard(card);
 
+  React.useEffect(() => {
+    api
+      .getInitialCards()
+      .then((cards) => setCards(cards))
+      .catch((err) => handleErrorEvent(err));
+  }, [cards]);
+
   const handleUpdateUser = (userData) => {
     api
       .updateUserInfo(userData)
@@ -47,6 +57,32 @@ function App() {
     api
       .setUserAvatar(avatarUrl)
       .then((userData) => setCurrentUser(userData))
+      .catch((err) => handleErrorEvent(err));
+  };
+
+  const handleAddCard = ({ name, link }) => {
+    api
+      .setNewCard({ name, link })
+      .then((card) => setCards([card, ...cards]))
+      .catch((err) => handleErrorEvent(err));
+  };
+
+  const handleCardLike = (card, isLiked) => {
+    api
+      .changeLikeStatus(card._id, isLiked)
+      .then((newCard) => {
+        setCards((state) => state.map((currentCard) => (currentCard._id === card._id ? newCard : currentCard)));
+      })
+      .catch((err) => handleErrorEvent(err));
+  };
+
+  const handleCardDelete = ({ _id: id }) => {
+    api
+      .deleteCard(id)
+      .then(() => {
+        const filteredCards = cards.filter((cardItem) => cardItem._id !== id);
+        setCards(filteredCards);
+      })
       .catch((err) => handleErrorEvent(err));
   };
 
@@ -63,20 +99,11 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header />
-        <Main onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onCardClick={handleCardClick} onErrorEvent={handleErrorEvent} onDeleteClick={handleDeleteCardClick} />
+        <Main cards={cards} onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onCardClick={handleCardClick} onCardLike={handleCardLike} onCardDelete={handleCardDelete} onErrorEvent={handleErrorEvent} onDeleteClick={handleDeleteCardClick} />
         <Footer />
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
-        <PopupWithForm name="add-card" title="New place" isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} textOnButton="Create">
-          <label className="popup__field">
-            <input type="text" className="popup__input popup__input_type_place" id="place-input" placeholder="Title" name="name" minLength="1" maxLength="30" required />
-            <span className="popup__input-error place-input-error"></span>
-          </label>
-          <label className="popup__field">
-            <input type="url" className="popup__input popup__input_type_img-src" id="image-url-input" placeholder="Image link" name="link" required />
-            <span className="popup__input-error image-url-input-error"></span>
-          </label>
-        </PopupWithForm>
+        <AddCardPopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddCard={handleAddCard} />
         <PopupWithForm name="delete-card" title="Are you sure?" isOpen={isDeleteCardPopupOpen} onClose={closeAllPopups} textOnButton="Yes" />
         <PopupWithForm name="error" title="An error occurred." isOpen={isErrorMessagePopupOpen} onClose={closeAllPopups} textOnButton="OK" />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
