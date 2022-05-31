@@ -1,14 +1,14 @@
-import React from "react";
-import Header from "./Header";
-import Main from "./Main";
-import Footer from "./Footer";
-import PopupWithForm from "./PopupWithForm";
-import EditProfilePopup from "./EditProfilePopup";
-import EditAvatarPopup from "./EditAvatarPopup";
-import AddPlacePopup from "./AddPlacePopup";
-import ImagePopup from "./ImagePopup";
-import api from "../utils/api";
-import CurrentUserContext from "../contexts/CurrentUserContext";
+import React from 'react';
+import Header from './Header';
+import Main from './Main';
+import Footer from './Footer';
+import PopupWithForm from './PopupWithForm';
+import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
+import ImagePopup from './ImagePopup';
+import api from '../utils/api';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
@@ -71,7 +71,9 @@ function App() {
     api
       .changeLikeStatus(card._id, isLiked)
       .then((newCard) => {
-        setCards((state) => state.map((currentCard) => (currentCard._id === card._id ? newCard : currentCard)));
+        setCards((state) =>
+          state.map((currentCard) => (currentCard._id === card._id ? newCard : currentCard))
+        );
       })
       .catch((err) => handleErrorEvent(err));
   };
@@ -97,15 +99,49 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <div className="page">
+      <div className='page'>
         <Header />
-        <Main cards={cards} onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onCardClick={handleCardClick} onCardLike={handleCardLike} onCardDelete={handleCardDelete} onErrorEvent={handleErrorEvent} onDeleteClick={handleDeleteCardClick} />
+        <Main
+          cards={cards}
+          onEditProfileClick={handleEditProfileClick}
+          onAddPlaceClick={handleAddPlaceClick}
+          onEditAvatarClick={handleEditAvatarClick}
+          onCardClick={handleCardClick}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
+          onErrorEvent={handleErrorEvent}
+          onDeleteClick={handleDeleteCardClick}
+        />
         <Footer />
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
-        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddCard={handleAddCard} />
-        <PopupWithForm name="delete-card" title="Are you sure?" isOpen={isDeleteCardPopupOpen} onClose={closeAllPopups} textOnButton="Yes" />
-        <PopupWithForm name="error" title="An error occurred." isOpen={isErrorMessagePopupOpen} onClose={closeAllPopups} textOnButton="OK" />
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onAddCard={handleAddCard}
+        />
+        <PopupWithForm
+          name='delete-card'
+          title='Are you sure?'
+          isOpen={isDeleteCardPopupOpen}
+          onClose={closeAllPopups}
+          textOnButton='Yes'
+        />
+        <PopupWithForm
+          name='error'
+          title='An error occurred.'
+          isOpen={isErrorMessagePopupOpen}
+          onClose={closeAllPopups}
+          textOnButton='OK'
+        />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       </div>
     </CurrentUserContext.Provider>
