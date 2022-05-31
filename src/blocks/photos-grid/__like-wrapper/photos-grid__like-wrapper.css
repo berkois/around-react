@@ -1,4 +1,10 @@
 .photos-grid__like-wrapper {
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  height: 37px;
 }
