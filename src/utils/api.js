@@ -22,7 +22,7 @@ class Api {
     this._customFetch({
       url: `${this._baseUrl}/users/me`,
       method: 'PATCH',
-      data: { name: userData.name, about: userData.about },
+      data: userData,
     });
 
   setNewCard = (cardData) =>
@@ -33,7 +33,10 @@ class Api {
     });
 
   deleteCard = (cardId) =>
-    this._customFetch({ url: `${this._baseUrl}/cards/${cardId}`, method: 'DELETE' });
+    this._customFetch({
+      url: `${this._baseUrl}/cards/${cardId}`,
+      method: 'DELETE',
+    });
 
   changeLikeStatus = (cardId, isLiked) => {
     return this._customFetch({

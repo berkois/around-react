@@ -2,6 +2,7 @@ import React from 'react';
 import PopupWithForm from './PopupWithForm';
 
 function AddPlacePopup(props) {
+  const { onAddCard, isOpen, onClose, isLoading } = props;
   const [cardName, setCardName] = React.useState('');
   const [cardLink, setCardLink] = React.useState('');
 
@@ -15,23 +16,26 @@ function AddPlacePopup(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.onAddCard({ name: cardName, link: cardLink });
-    props.onClose();
+    onAddCard({ name: cardName, link: cardLink });
+    setCardName('');
+    setCardLink('');
   };
+
   return (
     <PopupWithForm
       name='add-card'
       title='New place'
-      isOpen={props.isOpen}
-      onClose={props.onClose}
+      isOpen={isOpen}
+      onClose={onClose}
       onSubmit={handleSubmit}
-      textOnButton='Create'>
+      textOnButton={isLoading ? 'Loading...' : 'Create'}>
       <label className='popup__field'>
         <input
           type='text'
           className='popup__input popup__input_type_place'
           onChange={handleCardNameChange}
           id='place-input'
+          value={cardName}
           placeholder='Title'
           name='name'
           minLength='1'
@@ -46,6 +50,7 @@ function AddPlacePopup(props) {
           className='popup__input popup__input_type_img-src'
           onChange={handleCardLinkChange}
           id='image-url-input'
+          value={cardLink}
           placeholder='Image link'
           name='link'
           required

@@ -2,23 +2,23 @@ import React from 'react';
 import PopupWithForm from './PopupWithForm';
 
 function EditAvatarPopup(props) {
+  const { onUpdateAvatar, isOpen, onClose, isLoading } = props;
   const avatarUrl = React.createRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.onUpdateAvatar(avatarUrl.current.value);
+    onUpdateAvatar(avatarUrl.current.value);
     avatarUrl.current.value = '';
-    props.onClose();
   };
 
   return (
     <PopupWithForm
       name='edit-avatar'
       title='Change profile picture'
-      isOpen={props.isOpen}
-      onClose={props.onClose}
+      isOpen={isOpen}
+      onClose={onClose}
       onSubmit={handleSubmit}
-      textOnButton='Save'>
+      textOnButton={isLoading ? 'Loading...' : 'Save'}>
       <label className='popup__field'>
         <input
           type='url'

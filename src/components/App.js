@@ -2,68 +2,61 @@ import React from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import PopupWithForm from './PopupWithForm';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
+import ErrorMessagePopup from './ErrorMessagePopup';
 import api from '../utils/api';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
 function App() {
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
+  // declaring state hooks
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
+    React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
-  const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = React.useState(false);
-  const [isErrorMessagePopupOpen, setIsErrorMessagePopupOpen] = React.useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
+    React.useState(false);
+  const [isErrorMessagePopupOpen, setIsErrorMessagePopupOpen] =
+    React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState(null);
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
+  const [isFormOnLoadingState, setIsFormOnLoadingState] = React.useState(false);
+  // const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = React.useState(false);
 
-  React.useEffect(() => {
-    api
-      .getUserInfo()
-      .then((userData) => setCurrentUser(userData))
-      .catch((err) => handleErrorEvent(err));
-  }, []);
-
+  // declaring handlers
   const handleEditAvatarClick = () => setIsEditAvatarPopupOpen(true);
-
   const handleEditProfileClick = () => setIsEditProfilePopupOpen(true);
-
   const handleAddPlaceClick = () => setIsAddPlacePopupOpen(true);
-
-  const handleDeleteCardClick = () => setIsDeleteCardPopupOpen(true);
-
   const handleErrorEvent = () => setIsErrorMessagePopupOpen(true);
-
   const handleCardClick = (card) => setSelectedCard(card);
-
-  React.useEffect(() => {
-    api
-      .getInitialCards()
-      .then((cards) => setCards(cards))
-      .catch((err) => handleErrorEvent(err));
-  }, []);
+  // const handleDeleteCardClick = () => setIsDeleteCardPopupOpen(true);
 
   const handleUpdateUser = (userData) => {
+    setIsFormOnLoadingState(true);
     api
       .updateUserInfo(userData)
       .then((userData) => setCurrentUser(userData))
+      .then(() => closeAllPopups())
       .catch((err) => handleErrorEvent(err));
   };
 
   const handleUpdateAvatar = (avatarUrl) => {
+    setIsFormOnLoadingState(true);
     api
       .setUserAvatar(avatarUrl)
       .then((userData) => setCurrentUser(userData))
+      .then(() => closeAllPopups())
       .catch((err) => handleErrorEvent(err));
   };
 
   const handleAddCard = ({ name, link }) => {
+    setIsFormOnLoadingState(true);
     api
       .setNewCard({ name, link })
       .then((card) => setCards([card, ...cards]))
+      .then(() => closeAllPopups())
       .catch((err) => handleErrorEvent(err));
   };
 
@@ -72,7 +65,9 @@ function App() {
       .changeLikeStatus(card._id, isLiked)
       .then((newCard) => {
         setCards((state) =>
-          state.map((currentCard) => (currentCard._id === card._id ? newCard : currentCard))
+          state.map((currentCard) =>
+            currentCard._id === card._id ? newCard : currentCard
+          )
         );
       })
       .catch((err) => handleErrorEvent(err));
@@ -89,13 +84,29 @@ function App() {
   };
 
   const closeAllPopups = () => {
+    setIsFormOnLoadingState(false);
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
-    setIsDeleteCardPopupOpen(false);
     setIsErrorMessagePopupOpen(false);
     setSelectedCard(null);
+    // setIsDeleteCardPopupOpen(false);
   };
+
+  // declaring effects
+  React.useEffect(() => {
+    api
+      .getUserInfo()
+      .then((userData) => setCurrentUser(userData))
+      .catch((err) => handleErrorEvent(err));
+  }, []);
+
+  React.useEffect(() => {
+    api
+      .getInitialCards()
+      .then((cards) => setCards(cards))
+      .catch((err) => handleErrorEvent(err));
+  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -110,37 +121,37 @@ function App() {
           onCardLike={handleCardLike}
           onCardDelete={handleCardDelete}
           onErrorEvent={handleErrorEvent}
-          onDeleteClick={handleDeleteCardClick}
+          // onDeleteClick={handleDeleteCardClick}
         />
         <Footer />
         <EditProfilePopup
+          isLoading={isFormOnLoadingState}
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
         />
         <EditAvatarPopup
+          isLoading={isFormOnLoadingState}
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
         />
         <AddPlacePopup
+          isLoading={isFormOnLoadingState}
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
           onAddCard={handleAddCard}
         />
-        <PopupWithForm
+        {/* <PopupWithForm
           name='delete-card'
           title='Are you sure?'
           isOpen={isDeleteCardPopupOpen}
           onClose={closeAllPopups}
           textOnButton='Yes'
-        />
-        <PopupWithForm
-          name='error'
-          title='An error occurred.'
+        /> */}
+        <ErrorMessagePopup
           isOpen={isErrorMessagePopupOpen}
           onClose={closeAllPopups}
-          textOnButton='OK'
         />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       </div>
