@@ -44,7 +44,7 @@ function App() {
       .getInitialCards()
       .then((cards) => setCards(cards))
       .catch((err) => handleErrorEvent(err));
-  }, [cards]);
+  }, []);
 
   const handleUpdateUser = (userData) => {
     api
